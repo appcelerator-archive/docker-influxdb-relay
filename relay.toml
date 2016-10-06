@@ -1,0 +1,16 @@
+[[http]]
+name = "influxdb-http"
+bind-addr = "{{ HTTP_BIND_ADDR | default(":9096") }}"
+output = [
+    {% for key, value in environment('HTTP_BACKEND_') %}{ name = "{{ key }}", location = "http://{{ value }}/write" },
+{% endfor %}
+]
+
+[[udp]]
+name = "influxdb-udp"
+bind-addr = "{{ UDP_BIND_ADDR | default(":9096") }}"
+read-buffer = 0 # default
+output = [
+    {% for key, value in environment('UDP_BACKEND_') %}{ name = "{{ key }}", location = "{{ value }}", mtu = {{ UDP_MTU | default("512") }} },
+{% endfor %}
+]
