@@ -4,9 +4,8 @@ https://github.com/influxdata/influxdb-relay
 
 ## Run the container
 
-    docker -e BACKEND_influxdb_a=influxdb-a:8086 -e BACKEND_influxdb_b=influxdb-b:8086 \
-           -e RELAY_influxdb_a=influxdb-relay-a:9096 -e RELAY_influxdb_b=influxdb-relay-b:9096 \
-           run appcelerator/haproxy-proxy
+    docker -e HTTP_BACKEND_influxdb_a=influxdb-a:8086 -e HTTP_BACKEND_influxdb_b=influxdb-b:8086 \
+           run appcelerator/haproxy-relay
 
 ## Configuration
 
