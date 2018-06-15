@@ -1,10 +1,10 @@
-FROM appcelerator/alpine:20160928
-MAINTAINER Nicolas Degory <ndegory@axway.com>
+FROM alpine:3.7
+MAINTAINER Alex Hibbitt < 7901922+ahibbitt@users.noreply.github.com>
 
-#ENV INFLUXDB_VERSION 1.0.1
+#ENV INFLUXDB_VERSION 1.5
 
 RUN apk update && apk upgrade && \
-    apk --virtual build-deps add go>1.6 curl git gcc musl-dev make && \
+    apk --virtual build-deps add go>1.6 curl git gcc musl-dev make python && \
     export GOPATH=/go && \
     go get -v github.com/influxdata/influxdb-relay && \
     cd $GOPATH/src/github.com/influxdata/influxdb-relay && \
@@ -24,5 +24,3 @@ ENTRYPOINT ["/bin/sh", "-c"]
 CMD ["/bin/run.sh"]
 
 #HEALTHCHECK --interval=5s --retries=24 --timeout=1s CMD curl -sI localhost:8086/ping | grep -q "204 No Content"
-
-LABEL axway_image="influxdb-relay"
