@@ -1,16 +1,16 @@
 version: '2'
 services:
   influxdb-backend-a:
-    image: appcelerator/influxdb:influxdb-1.0
+    image: influxdb:1.5-alpine
     environment:
       PRE_CREATE_DB: "mydb"
   influxdb-backend-b:
-    image: appcelerator/influxdb:influxdb-1.0
+    image: influxdb:1.5-alpine
     environment:
       PRE_CREATE_DB: "mydb"
   influxdb-relay-a:
     build: .
-    image: appcelerator/influxdb-relay
+    image: ahibbitt/influxdb-relay
     environment:
       HTTP_BACKEND_influxdba: influxdb-backend-a:8086
       HTTP_BACKEND_influxdbb: influxdb-backend-b:8086
@@ -19,29 +19,10 @@ services:
       - influxdb-backend-b
   influxdb-relay-b:
     build: .
-    image: appcelerator/influxdb-relay
+    image: ahibbitt/influxdb-relay
     environment:
       HTTP_BACKEND_influxdba: influxdb-backend-a:8086
       HTTP_BACKEND_influxdbb: influxdb-backend-b:8086
     depends_on:
       - influxdb-backend-a
       - influxdb-backend-b
-  influxdb-proxy:
-    image: appcelerator/influxdb-proxy
-    ports:
-      - "8086:8086"
-      - "8083:8083"
-    environment:
-      BACKEND_influxdba: influxdb-backend-a:8086:8083
-      BACKEND_influxdbb: influxdb-backend-b:8086:8083
-      RELAY_influxdba: influxdb-relay-a:9096
-      RELAY_influxdbb: influxdb-relay-b:9096
-    depends_on:
-      - influxdb-relay-a
-      - influxdb-relay-b
-      - influxdb-backend-a
-      - influxdb-backend-b
-  sut:
-    build: sut
-    depends_on:
-      - influxdb-proxy
